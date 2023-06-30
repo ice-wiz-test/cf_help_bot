@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 	"os"
-	"fmt"
 	"strings"
+	"fmt"
 	user "cf_help_bot/user"
 	api "cf_help_bot/api"
 
@@ -15,7 +15,8 @@ func main() {
 	u := user.User{}
 	u.Handle = "LeftPepeper"
 	data := api.GetUserRating(u)
-	fmt.Println(data)
+	u.SetCurrentRating(data.Result[len(data.Result) - 1].NewRating)
+	fmt.Println(u.CurrentRating)
 	// Create a new bot instance
 	bot, err := tgbotapi.NewBotAPI(os.Getenv("TELEGRAM_TOKEN"))
 

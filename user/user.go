@@ -3,7 +3,7 @@ package user
 
 type User struct {
 	Handle          string
-	Rating          int
+	CurrentRating   int
 	SolvedQuantity  int
 	Solved          []int
 	RatingHistory   []int
@@ -20,13 +20,13 @@ func (u *User) SetHandle(handle string) {
 }
 
  // GetRating returns the value of the Rating field.
-func (u *User) GetRating() int {
-	return u.Rating
+func (u *User) GetCurrentRating() int {
+	return u.CurrentRating
 }
 
  // SetRating sets the value of the Rating field.
-func (u *User) SetRating(rating int) {
-	u.Rating = rating
+func (u *User) SetCurrentRating(rating int) {
+	u.CurrentRating = rating
 }
 
  // GetSolvedQuantity returns the value of the SolvedQuantity field.
