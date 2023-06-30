@@ -2,11 +2,10 @@ package api
 
  import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"user"
+	user "cf_help_bot/user"
 )
 
 type ResponseUserRating struct {
@@ -19,7 +18,7 @@ type ResponseUserRating struct {
 	NewRating               int    `json:"newRating"`
 }
 
-func getUserRating(user user.User) Response{
+func getUserRating(user user.User) ResponseUserRating{
 	// Make an HTTP GET request to the API endpoint
 	resp, err := http.Get("https://codeforces.com/api/user.rating?handle=" + user.Handle)
 
@@ -45,9 +44,4 @@ func getUserRating(user user.User) Response{
 		log.Fatal(err)
 	}
 	return data
-}
- func main() {
-	var user user.User
-	user.Handle = "LeftPepeper"
-	data := getUserRating(user)
 }

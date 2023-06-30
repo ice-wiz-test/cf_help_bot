@@ -3,12 +3,21 @@ package main
 import (
 	"log"
 	"os"
+	"fmt"
 	"strings"
+	user "cf_help_bot/user"
+	api "cf_help_bot/api"
 
  	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 func main() {
+	u := user.User{}
+	u.Handle = "LeftPepeper"
+	fmt.Println("ok\n")
+	fmt.Println("User: %+v\n", u)
+	//data := api.getUserRating(user)
+	fmt.Println("ok\n")
 	// Create a new bot instance
 	bot, err := tgbotapi.NewBotAPI(os.Getenv("TELEGRAM_TOKEN"))
 
@@ -35,7 +44,7 @@ func main() {
 		if update.Message == nil { // Ignore any non-Message updates
 			continue
 		}
-		
+
  		// Check if the message contains "/start"
 		if strings.Contains(update.Message.Text, "/start") {
 			// Send a welcome message
@@ -46,4 +55,5 @@ func main() {
 			}
 		}
 	}
+	
 }
