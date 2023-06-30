@@ -4,6 +4,7 @@ package api
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"fmt"
 	"net/http"
 	user "cf_help_bot/user"
 )
@@ -18,7 +19,16 @@ type ResponseUserRating struct {
 	NewRating               int    `json:"newRating"`
 }
 
-func getUserRating(u user.User) ResponseUserRating{
+type ResponseUserRatingUpdates struct {
+    Status string    `json:"status"`
+    Result []ResponseUserRating `json:"result"`
+}
+
+func check() {
+	fmt.Println("ok")
+} 
+
+func GetUserRating(u user.User) ResponseUserRatingUpdates{
 	// Make an HTTP GET request to the API endpoint
 	resp, err := http.Get("https://codeforces.com/api/user.rating?handle=" + u.Handle)
 
@@ -36,7 +46,7 @@ func getUserRating(u user.User) ResponseUserRating{
 	}
  	
 	// Create a variable to hold the parsed response
-	var data ResponseUserRating
+	var data ResponseUserRatingUpdates
  	// Unmarshal the JSON data into the data variable
 	err = json.Unmarshal(body, &data)
 	
