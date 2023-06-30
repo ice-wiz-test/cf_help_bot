@@ -18,9 +18,9 @@ type ResponseUserRating struct {
 	NewRating               int    `json:"newRating"`
 }
 
-func getUserRating(user user.User) ResponseUserRating{
+func getUserRating(u user.User) ResponseUserRating{
 	// Make an HTTP GET request to the API endpoint
-	resp, err := http.Get("https://codeforces.com/api/user.rating?handle=" + user.Handle)
+	resp, err := http.Get("https://codeforces.com/api/user.rating?handle=" + u.Handle)
 
 	if err != nil {
 		log.Fatal(err)

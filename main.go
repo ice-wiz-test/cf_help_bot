@@ -14,10 +14,8 @@ import (
 func main() {
 	u := user.User{}
 	u.Handle = "LeftPepeper"
-	fmt.Println("ok\n")
-	fmt.Println("User: %+v\n", u)
-	//data := api.getUserRating(user)
-	fmt.Println("ok\n")
+	data := api.getUserRating(u)
+	fmt.Println(data)
 	// Create a new bot instance
 	bot, err := tgbotapi.NewBotAPI(os.Getenv("TELEGRAM_TOKEN"))
 
