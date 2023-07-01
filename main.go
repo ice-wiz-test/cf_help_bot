@@ -1,22 +1,18 @@
 package main
 
 import (
+	user "cf_help_bot/user"
+	"fmt"
 	"log"
 	"os"
 	"strings"
-	"fmt"
-	user "cf_help_bot/user"
-	api "cf_help_bot/api"
 
- 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 func main() {
 	u := user.User{}
-	u.Handle = "LeftPepeper"
-	data := api.GetUserRating(u)
-	u.SetCurrentRating(data.Result[len(data.Result) - 1].NewRating)
-	fmt.Println(u.CurrentRating)
+	u.Initialize("leftPepeper")
 	// Create a new bot instance
 	bot, err := tgbotapi.NewBotAPI(os.Getenv("TELEGRAM_TOKEN"))
 
@@ -25,27 +21,27 @@ func main() {
 		log.Fatal(err)
 	}
 
- 	// Enable debug mode
+	// Enable debug mode
 	bot.Debug = true
- 	log.Printf("Authorized on account %s", bot.Self.UserName)
+	log.Printf("Authorized on account %s", bot.Self.UserName)
 
- 	// Set up an update configuration
+	// Set up an update configuration
 	updateConfig := tgbotapi.NewUpdate(0)
 	updateConfig.Timeout = 60
- 	// Get updates from the bot
+	// Get updates from the bot
 	updateChan, err := bot.GetUpdatesChan(updateConfig)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
- 	// Process received updates
+	// Process received updates
 	for update := range updateChan {
 		if update.Message == nil { // Ignore any non-Message updates
 			continue
 		}
 
- 		// Check if the message contains "/start"
+		// Check if the message contains "/start"
 		if strings.Contains(update.Message.Text, "/start") {
 			// Send a welcome message
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Hello! Welcome to the bot!")
@@ -55,5 +51,5 @@ func main() {
 			}
 		}
 	}
-	
+
 }

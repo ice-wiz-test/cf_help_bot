@@ -1,7 +1,6 @@
 package api
 
 import (
-	user "cf_help_bot/user"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -28,9 +27,9 @@ func check() {
 	fmt.Println("ok")
 }
 
-func GetUserRating(u user.User) ResponseUserRatingUpdates {
+func GetUserRating(handle string) ResponseUserRatingUpdates {
 	// Make an HTTP GET request to the API endpoint
-	resp, err := http.Get("https://codeforces.com/api/user.rating?handle=" + u.Handle)
+	resp, err := http.Get("https://codeforces.com/api/user.rating?handle=" + handle)
 
 	if err != nil {
 		log.Fatal(err)
