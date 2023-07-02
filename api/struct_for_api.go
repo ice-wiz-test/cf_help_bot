@@ -41,3 +41,44 @@ type Submission struct {
 	MemoryConsumedBytes int     `json:"memoryConsumedBytes"`
 	Points              float64 `json:"points"`
 }
+
+type SubmissionList struct {
+	Status string       `json:"status"`
+	Result []Submission `json:"result"`
+}
+
+type RatingChange struct {
+	ContestID               int    `json:"contestId"`
+	ContestName             string `json:"contestName"`
+	Handle                  string `json:"handle"`
+	Rank                    int    `json:"rank"`
+	RatingUpdateTimeSeconds int    `json:"ratingUpdateTimeSeconds"`
+	OldRating               int    `json:"oldRating"`
+	NewRating               int    `json:"newRating"`
+}
+
+type RatingChangeList struct {
+	Status string         `json:"status"`
+	Result []RatingChange `json:"result"`
+}
+
+type User struct {
+	LastName                string `json:"lastName"`
+	LastOnlineTimeSeconds   int    `json:"lastOnlineTimeSeconds"`
+	Rating                  int    `json:"rating"`
+	FriendOfCount           int    `json:"friendOfCount"`
+	TitlePhoto              string `json:"titlePhoto"`
+	Handle                  string `json:"handle"`
+	Avatar                  string `json:"avatar"`
+	FirstName               string `json:"firstName"`
+	Contribution            int    `json:"contribution"`
+	Organization            string `json:"organization"`
+	Rank                    string `json:"rank"`
+	MaxRating               int    `json:"maxRating"`
+	RegistrationTimeSeconds int    `json:"registrationTimeSeconds"`
+	MaxRank                 string `json:"maxRank"`
+}
+type UserList struct {
+	Status string `json:"status"`
+	Result []User `json:"result"`
+}

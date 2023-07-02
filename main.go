@@ -12,7 +12,14 @@ import (
 
 func main() {
 	u := user.User{}
-	u.Initialize("leftPepeper")
+	u.Initialize("LeftPepeper")
+	fmt.Println(u.GetHandle())
+	fmt.Println(u.GetCurrentRating())
+	fmt.Println(u.GetRatingHistory())
+	fmt.Println(u.GetSolvedQuantity())
+	fmt.Println(u.GetSolved())
+	fmt.Println(u.GetSubmissionsQuantity())
+	fmt.Println(u.GetSubmissions())
 	// Create a new bot instance
 	bot, err := tgbotapi.NewBotAPI(os.Getenv("TELEGRAM_TOKEN"))
 
