@@ -14,6 +14,7 @@ type User struct {
 	Submissions         []api.Problem
 	Solved              []api.Problem
 	RatingHistory       []int
+	SubmissionList      api.SubmissionList
 }
 
 // GetHandle returns the value of the Handle field.
@@ -108,6 +109,15 @@ func (u *User) setRatingHistory(ratingChangeList api.RatingChangeList) {
 	u.RatingHistory = ratingHistory
 }
 
+// sets the submission list of a user as a given thing
+func (u *User) setSubmissionList(list api.SubmissionList) {
+	u.SubmissionList = list
+}
+
+// returns the user's submission list
+func (u *User) GetSubmissionList() api.SubmissionList {
+	return u.SubmissionList
+}
 func (u *User) Initialize(handle string) {
 	u.setHandle(handle)
 	ratingChangeList := api.GetUserRating(u.Handle)
@@ -115,8 +125,52 @@ func (u *User) Initialize(handle string) {
 	u.setRatingHistory(ratingChangeList)
 	u.setMaxRating(u.GetRatingHistory())
 	submissionList := api.GetUserStatus(u.Handle)
+	u.setSubmissionList(submissionList)
 	u.setSubmissions(submissionList)
 	u.setSubmissionsQuantity(len(submissionList.Result))
 	u.setSolved(submissionList)
 	u.setSolvedQuantity(len(u.GetSolved()))
+}
+
+// this functions returns a dictionary string-> int, which represents the quantity of tasks with a given tag that the user has solved
+func (u *User) Get_solved_quantity_by_tags() map[string]int {
+	m := map[string]int{}
+	current_user_rating := u.GetCurrentRating()
+	for i := 0; i < len(u.Solved); i++ {
+		if current_user_rating-u.Solved[i].Rating < 300 {
+			for l := 0; l < len(u.Solved[i].Tags); l++ {
+				m[u.Solved[i].Tags[l]]++
+			}
+		}
+	}
+	return m
+}
+
+// this function returns an int - number of tasks solved by user which have a rating much higher than his own
+func (u *User) Get_solved_by_big_rating() int {
+	k := 0
+	current_user_rating := u.GetCurrentRating()
+	for i := 0; i < len(u.Solved); i++ {
+		if u.Solved[i].Rating-current_user_rating >= 300 {
+			k++
+		}
+	}
+	return k
+}
+
+// returns the amount of wrong attempts on "interesting" tasks by tags
+func (u *User) Get_wrong_attempts_by_task() map[string]int {
+	m := map[string]int{}
+	current_user_rating := u.GetCurrentRating()
+	for i := 0; i < len(u.SubmissionList.Result); i++ {
+		current_submission := u.SubmissionList.Result[i]
+		if current_submission.Verdict != "OK" && current_submission.RequestedProblem.Rating-current_user_rating >= -300 {
+			if current_submission.PassedTestCount != 0 {
+				for iter_str := 0; iter_str < len(current_submission.RequestedProblem.Tags); iter_str++ {
+					m[current_submission.RequestedProblem.Tags[iter_str]]++
+				}
+			}
+		}
+	}
+	return m
 }
