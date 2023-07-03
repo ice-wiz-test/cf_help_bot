@@ -14,7 +14,7 @@ func main() {
 	u := user.User{}
 	u.Initialize("LeftPepeper")
 	fmt.Println(u.Get_solved_quantity_by_tags())
-
+	fmt.Println(u.Get_solved_indexes_by_tags())
 	// Create a new bot instance
 	bot, err := tgbotapi.NewBotAPI(os.Getenv("TELEGRAM_TOKEN"))
 

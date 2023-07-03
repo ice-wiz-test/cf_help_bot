@@ -3,6 +3,7 @@ package user
 import (
 	api "cf_help_bot/api"
 	help_func "cf_help_bot/help_func"
+	"fmt"
 )
 
 type User struct {
@@ -128,16 +129,29 @@ func (u *User) Initialize(handle string) {
 
 // this functions returns a dictionary string-> int, which represents the quantity of tasks with a given tag that the user has solved
 func (u *User) Get_solved_quantity_by_tags() map[string]int {
-	m := map[string]int{}
+	solved_quantity_by_tags := map[string]int{}
 	current_user_rating := u.GetCurrentRating()
 	for i := 0; i < len(u.Solved); i++ {
 		if current_user_rating-u.Solved[i].Rating < 300 {
 			for l := 0; l < len(u.Solved[i].Tags); l++ {
-				m[u.Solved[i].Tags[l]]++
+				solved_quantity_by_tags[u.Solved[i].Tags[l]]++
 			}
 		}
 	}
-	return m
+	return solved_quantity_by_tags
+}
+
+// this function returns indexes of solved problems sorted by tags
+func (U *User) Get_solved_indexes_by_tags() map[string][]string {
+	solved_indexes_by_tags := map[string][]string{}
+	for i := 0; i < len(U.Solved); i++ {
+		for l := 0; l < len(U.Solved[i].Tags); l++ {
+			contestId := fmt.Sprint(U.Solved[i].ContestId)
+			solved_indexes_by_tags[U.Solved[i].Tags[l]] = append(solved_indexes_by_tags[U.Solved[i].Tags[l]],
+				"/"+contestId+"/"+U.Solved[i].Index)
+		}
+	}
+	return solved_indexes_by_tags
 }
 
 // this function returns an int - number of tasks solved by user which have a rating much higher than his own
