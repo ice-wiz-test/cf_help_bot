@@ -11,10 +11,9 @@ type User struct {
 	MaxRating           int
 	SolvedQuantity      int
 	SubmissionsQuantity int
-	Submissions         []api.Problem
+	Submissions         []api.Submission
 	Solved              []api.Problem
 	RatingHistory       []int
-	SubmissionList      api.SubmissionList
 }
 
 // GetHandle returns the value of the Handle field.
@@ -58,22 +57,26 @@ func (u *User) setSolvedQuantity(quantity int) {
 	u.SolvedQuantity = quantity
 }
 
+// GetSubmissionsQuantity returns quantity of submissions by user
 func (u *User) GetSubmissionsQuantity() int {
 	return u.SubmissionsQuantity
 }
 
+// setSubmissionsQuantity sets quantity of submissions
 func (u *User) setSubmissionsQuantity(quantity int) {
 	u.SubmissionsQuantity = quantity
 }
 
-func (u *User) GetSubmissions() []api.Problem {
+// GetSubmissions gets all submissions from user
+func (u *User) GetSubmissions() []api.Submission {
 	return u.Submissions
 }
 
+// setSubmissions sets value of Submissions field(Submission class from api)
 func (u *User) setSubmissions(submissionList api.SubmissionList) {
-	submissions := []api.Problem{}
+	submissions := []api.Submission{}
 	for i := 0; i < len(submissionList.Result); i++ {
-		submissions = append(submissions, submissionList.Result[i].RequestedProblem)
+		submissions = append(submissions, submissionList.Result[i])
 	}
 	u.Submissions = submissions
 }
@@ -109,15 +112,7 @@ func (u *User) setRatingHistory(ratingChangeList api.RatingChangeList) {
 	u.RatingHistory = ratingHistory
 }
 
-// sets the submission list of a user as a given thing
-func (u *User) setSubmissionList(list api.SubmissionList) {
-	u.SubmissionList = list
-}
-
-// returns the user's submission list
-func (u *User) GetSubmissionList() api.SubmissionList {
-	return u.SubmissionList
-}
+// this function sets data for user by handle
 func (u *User) Initialize(handle string) {
 	u.setHandle(handle)
 	ratingChangeList := api.GetUserRating(u.Handle)
@@ -125,7 +120,6 @@ func (u *User) Initialize(handle string) {
 	u.setRatingHistory(ratingChangeList)
 	u.setMaxRating(u.GetRatingHistory())
 	submissionList := api.GetUserStatus(u.Handle)
-	u.setSubmissionList(submissionList)
 	u.setSubmissions(submissionList)
 	u.setSubmissionsQuantity(len(submissionList.Result))
 	u.setSolved(submissionList)
@@ -162,8 +156,8 @@ func (u *User) Get_solved_by_big_rating() int {
 func (u *User) Get_wrong_attempts_by_task() map[string]int {
 	m := map[string]int{}
 	current_user_rating := u.GetCurrentRating()
-	for i := 0; i < len(u.SubmissionList.Result); i++ {
-		current_submission := u.SubmissionList.Result[i]
+	for i := 0; i < len(u.Submissions); i++ {
+		current_submission := u.Submissions[i]
 		if current_submission.Verdict != "OK" && current_submission.RequestedProblem.Rating-current_user_rating >= -300 {
 			if current_submission.PassedTestCount != 0 {
 				for iter_str := 0; iter_str < len(current_submission.RequestedProblem.Tags); iter_str++ {
