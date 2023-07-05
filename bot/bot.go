@@ -1,6 +1,7 @@
 package bot
 
 import (
+	user "cf_help_bot/user"
 	"log"
 	"os"
 	"strings"
@@ -12,16 +13,46 @@ var lang string
 
 func welcome(update tgbotapi.Update, bot tgbotapi.BotAPI) {
 	switch lang {
+	// Welcome messages and description by the selected language
 	case "Eng":
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Hello! Welcome to the CFHelpBot!")
 		send(bot, msg)
 		// Send description message
-		msg = tgbotapi.NewMessage(update.Message.Chat.ID, "")
+		msg = tgbotapi.NewMessage(update.Message.Chat.ID, "//TODO")
+		send(bot, msg)
+		msg = tgbotapi.NewMessage(update.Message.Chat.ID, "Write down your handle in codeforces.com")
+		send(bot, msg)
 	case "Rus":
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Привет! Это CFHelpBot!")
 		send(bot, msg)
 		// Send description message
-		msg = tgbotapi.NewMessage(update.Message.Chat.ID, "")
+		msg = tgbotapi.NewMessage(update.Message.Chat.ID, "//TODO")
+		send(bot, msg)
+		msg = tgbotapi.NewMessage(update.Message.Chat.ID, "Напишите свой хэндл с codeforces.com")
+		send(bot, msg)
+	}
+	updateConfig := tgbotapi.NewUpdate(0)
+	updateConfig.Timeout = 60
+	// Get updates from the bot
+	updateChan, err := bot.GetUpdatesChan(updateConfig)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	// Process received updates
+	for update := range updateChan {
+		if update.Message == nil {
+			// Ignore any non-Message updates
+			continue
+		} else {
+			log.Println(update.Message.Text)
+			u := user.User{}
+			// Initialize user by the handle got from user
+			u.Initialize(update.Message.Text)
+			log.Println(u.GetHandle())
+			log.Println(u.Get_solved_quantity_by_tags())
+			log.Println(u.Get_solved_indexes_by_tags())
+		}
 	}
 }
 
@@ -29,6 +60,40 @@ func send(bot tgbotapi.BotAPI, msg tgbotapi.MessageConfig) {
 	_, sendErr := bot.Send(msg)
 	if sendErr != nil {
 		log.Println(sendErr)
+	}
+}
+
+func selectLang(bot tgbotapi.BotAPI) {
+	// Set up an update configuration
+	updateConfig := tgbotapi.NewUpdate(0)
+	updateConfig.Timeout = 60
+	// Get updates from the bot
+	updateChan, err := bot.GetUpdatesChan(updateConfig)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	// Process received updates
+	for update := range updateChan {
+		if update.Message == nil {
+			// Ignore any non-Message updates
+			continue
+		}
+		// Select language
+		if update.Message.Text == "Eng" || update.Message.Text == "eng" ||
+			update.Message.Text == "english" || update.Message.Text == "English" {
+			lang = "Eng"
+			return
+		}
+		if update.Message.Text == "Rus" || update.Message.Text == "rus" ||
+			update.Message.Text == "русский" || update.Message.Text == "Русский" ||
+			update.Message.Text == "рус" || update.Message.Text == "Рус" {
+			lang = "Rus"
+			return
+		} else {
+			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "You need to write down language you need. English(Eng) or Russian(Rus)")
+			send(bot, msg)
+		}
 	}
 }
 
@@ -77,19 +142,10 @@ func Initialize() {
 
 		if strings.Contains(update.Message.Text, "/lang") {
 			// Send language select message
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "What language do you want. Please write langEng or langRus")
+			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "What language do you want. Please write Eng or Rus")
 			send(*bot, msg)
-		}
-
-		if strings.Contains(update.Message.Text, "langEng") {
-			lang = "Eng"
-			// Send a welcome message
-			welcome(update, *bot)
-
-		}
-
-		if strings.Contains(update.Message.Text, "langRus") {
-			lang = "Rus"
+			// Select language
+			selectLang(*bot)
 			// Send a welcome message
 			welcome(update, *bot)
 		}
