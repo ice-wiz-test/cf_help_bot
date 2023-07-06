@@ -167,6 +167,7 @@ func (u *User) Get_solved_by_big_rating() int {
 }
 
 // returns the amount of wrong attempts on "interesting" tasks by tags
+// ебучая хуйня, убрать при первой возможности магические константы
 func (u *User) Get_wrong_attempts_by_task() map[string]int {
 	m := map[string]int{}
 	current_user_rating := u.GetCurrentRating()
