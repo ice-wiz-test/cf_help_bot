@@ -1,2 +1,2 @@
 bot/startup/token.txt
-connection_string.txt
+database/startup/connection_string.txt

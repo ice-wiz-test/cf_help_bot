@@ -2,8 +2,9 @@ package database
 
 import (
 	"context"
-	db "github.com/jackc/pgx/v4"
 	"log"
+
+	db "github.com/jackc/pgx/v4"
 )
 
 func get_connection() (error, *db.Conn) {

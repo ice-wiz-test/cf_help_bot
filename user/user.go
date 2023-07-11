@@ -4,6 +4,7 @@ import (
 	api "cf_help_bot/api"
 	help_func "cf_help_bot/help_func"
 	"fmt"
+	"log"
 )
 
 type User struct {
@@ -116,6 +117,8 @@ func (u *User) setRatingHistory(ratingChangeList api.RatingChangeList) {
 // this function sets data for user by handle
 func (u *User) Initialize(handle string) {
 	u.setHandle(handle)
+	log.Println("Handle:")
+	log.Println(u.GetHandle())
 	ratingChangeList := api.GetUserRating(u.Handle)
 	u.setCurrentRating(ratingChangeList.Result[len(ratingChangeList.Result)-1].NewRating)
 	u.setRatingHistory(ratingChangeList)
