@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"os"
+	"strconv"
 )
 
 // TODO - should change database/sql to pgx
@@ -33,13 +34,13 @@ func open_connection() (bool, error) {
 	return true, nil
 }
 
-func Does_person_exist_in_database(id int64) (error, bool) {
+func Does_person_exist_in_database(id int) (error, bool) {
 	_, err := open_connection()
 	if err != nil {
 		return err, false
 	}
 	query_string := "SELECT TOP 1 telegram_bot.userID FROM telegram_bot WHERE telegram_bot.userID = "
-	query_string += string(id)
+	query_string += strconv.Itoa(id)
 	res, er := openedConnection.QueryContext(context.Background(), query_string)
 	if er != nil {
 		return er, false
