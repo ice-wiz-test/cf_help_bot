@@ -10,7 +10,7 @@ import (
 var haveOpenConnection bool = false
 var openedConnection *sql.DB
 
-func get_connection_string() string {
+func Get_connection_string() string {
 	filePath := "database/startup/connection_string.txt"
 	readFile, err := os.ReadFile(filePath)
 	if err != nil {
@@ -23,7 +23,7 @@ func open_connection() (bool, error) {
 	if haveOpenConnection {
 		return true, nil
 	}
-	s1 := get_connection_string()
+	s1 := Get_connection_string()
 	db, err := sql.Open("postgres", s1)
 	if err != nil {
 		return false, err
