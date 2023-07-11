@@ -10,12 +10,6 @@ import (
 )
 
 func main() {
-	//connstr := database.Get_connection_string()
-	//db, err := sql.Open("postgres", connstr)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//defer db.Close()
 	go bot.Initialize()
 	go web.Start()
 	select {}
