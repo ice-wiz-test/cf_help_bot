@@ -1,6 +1,7 @@
 package bot
 
 import (
+	db "cf_help_bot/database"
 	hf "cf_help_bot/help_func"
 	user "cf_help_bot/user"
 	"log"
@@ -88,6 +89,15 @@ func Initialize() {
 		if strings.Contains(update.Message.Text, "/start") {
 			log.Println("Start")
 			// Send message to start language select
+			err, person_exits := db.Does_person_exist_in_database(update.Message.From.ID)
+			log.Println("Person exists:")
+			log.Println(person_exits)
+			data, err := db.Get_user_data(update.Message.From.ID)
+			log.Println("Database connected")
+			if err != nil {
+				log.Fatal(err)
+			}
+			log.Println(data)
 			if isLangSelected == false {
 				isLangSelection = true
 			} else {
@@ -168,6 +178,7 @@ func Initialize() {
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, hf.ConvertMaptToString(u.Get_solved_quantity_by_tags()))
 				send(*bot, msg)
 				isUserInitialization = false
+				//db.Set_user_data(update.Message.From.ID, u, isLangSelected, isLangSelection, lang)
 			}
 		}
 	}
