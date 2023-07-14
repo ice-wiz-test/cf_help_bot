@@ -23,3 +23,13 @@ func ConvertMaptToString(m map[string]int) string {
 	}
 	return b.String()
 }
+
+func Convert_lang_to_DB_like(lang string) int {
+	var lang_db int
+	if lang == "eng" {
+		lang_db = 0
+	} else if lang == "rus" {
+		lang_db = 1
+	}
+	return lang_db
+}

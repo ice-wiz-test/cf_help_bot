@@ -16,6 +16,10 @@ type User struct {
 	Submissions         []api.Submission
 	Solved              []api.Problem
 	RatingHistory       []int
+	UserId              int
+	isLangSelected      bool
+	isLangSelection     bool
+	Lang                string
 }
 
 // GetHandle returns the value of the Handle field.
@@ -114,8 +118,40 @@ func (u *User) setRatingHistory(ratingChangeList api.RatingChangeList) {
 	u.RatingHistory = ratingHistory
 }
 
+func (u *User) GetUserId() int {
+	return u.UserId
+}
+
+func (u *User) setUserId(userId int) {
+	u.UserId = userId
+}
+
+func (u *User) IsLangSelected() bool {
+	return u.isLangSelected
+}
+
+func (u *User) setLangSelected(selected bool) {
+	u.isLangSelected = selected
+}
+
+func (u *User) IsLangSelection() bool {
+	return u.isLangSelection
+}
+
+func (u *User) setLangSelection(selection bool) {
+	u.isLangSelection = selection
+}
+
+func (u *User) GetLang() string {
+	return u.Lang
+}
+
+func (u *User) setLang(lang string) {
+	u.Lang = lang
+}
+
 // this function sets data for user by handle
-func (u *User) Initialize(handle string) {
+func (u *User) Initialize(userID int, handle string, lang string, isLangSelected bool, isLangSelection bool) {
 	u.setHandle(handle)
 	log.Println("Handle:")
 	log.Println(u.GetHandle())
@@ -128,6 +164,10 @@ func (u *User) Initialize(handle string) {
 	u.setSubmissionsQuantity(len(submissionList.Result))
 	u.setSolved(submissionList)
 	u.setSolvedQuantity(len(u.GetSolved()))
+	u.setUserId(userID)
+	u.setLangSelected(isLangSelected)
+	u.setLangSelection(isLangSelection)
+	u.setLang(lang)
 }
 
 // this functions returns a dictionary string-> int, which represents the quantity of tasks with a given tag that the user has solved

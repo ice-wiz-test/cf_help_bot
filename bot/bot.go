@@ -94,10 +94,11 @@ func Initialize() {
 			log.Println(person_exits)
 			data, err := db.Get_user_data(update.Message.From.ID)
 			log.Println("Database connected")
+			log.Println(data)
 			if err != nil {
 				log.Fatal(err)
 			}
-			log.Println(data)
+			//log.Println(data)
 			if isLangSelected == false {
 				isLangSelection = true
 			} else {
@@ -170,7 +171,7 @@ func Initialize() {
 				log.Println(update.Message.Text)
 				u := user.User{}
 				// Initialize user by the handle got from user
-				u.Initialize(update.Message.Text)
+				u.Initialize(update.Message.From.ID, update.Message.Text, lang, isLangSelected, isLangSelection)
 				isUserInitialized = true
 				log.Println(u.GetHandle())
 				log.Println(u.Get_solved_quantity_by_tags())
@@ -178,7 +179,7 @@ func Initialize() {
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, hf.ConvertMaptToString(u.Get_solved_quantity_by_tags()))
 				send(*bot, msg)
 				isUserInitialization = false
-				//db.Set_user_data(update.Message.From.ID, u, isLangSelected, isLangSelection, lang)
+				db.Set_user_data(update.Message.From.ID, u, u.IsLangSelected(), u.IsLangSelection(), u.GetLang())
 			}
 		}
 	}

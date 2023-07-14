@@ -9,6 +9,14 @@ import (
 	db "github.com/jackc/pgx/v4"
 )
 
+type SendedArgs struct {
+	userID          int
+	handle          string
+	isLangSelected  bool
+	isLangSelection bool
+	lang            string
+}
+
 func get_connection() (error, *db.Conn) {
 	conn, err := db.Connect(context.Background(), "postgres://postgres:qCdMMnPsYYt6Ss6AqKeL@localhost:5432/test")
 	if err != nil {
@@ -26,6 +34,7 @@ func Get_user_data(userId int) ([]interface{}, error) {
 		query_string := "SELECT * FROM telegram_bot WHERE telegram_bot.userID = "
 		query_string += strconv.Itoa(userId)
 		rows, err := openedConnection.QueryContext(context.Background(), query_string)
+		log.Println("Get query done")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -51,7 +60,8 @@ func Set_user_data(userId int, u user.User, isLangSelected bool, isLangSelection
 	} else if lang == "rus" {
 		lang_db = 1
 	}
-	result, err := openedConnection.ExecContext(context.Background(), "insert into users(handle, isSettingLocalization, hasSetLocalization, localization, userID) values ("+u.GetHandle()+","+strconv.FormatBool(isLangSelection)+","+strconv.FormatBool(isLangSelected)+","+strconv.Itoa(lang_db)+","+strconv.Itoa(userId)+")")
+	query := "INSERT INTO users (handle, isSettingLocalization, hasSetLocalization, localization, userID) VALUES (?, ?, ?, ?, ?)"
+	result, err := openedConnection.ExecContext(context.Background(), query, u.GetHandle(), isLangSelection, isLangSelected, lang_db, userId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -66,16 +76,34 @@ func Set_user_data(userId int, u user.User, isLangSelected bool, isLangSelection
 }
 
 // TODO
-func Update_user_data(userId int) {
-
+func Update_user_data(args SendedArgs) {
+	_, err := open_connection()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
-// TODO
+// Function delete all user data from database
 func Delete_user_data(userId int) {
-
+	_, err := open_connection()
+	if err != nil {
+		log.Fatal(err)
+	}
+	query := "DELETE FROM telegram_bot WHERE telegram_bot.userID = " + strconv.Itoa(userId)
+	result, err := openedConnection.ExecContext(context.Background(), query)
+	if err != nil {
+		log.Fatal(err)
+	}
+	rows, err := result.RowsAffected()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if rows != 1 {
+		log.Fatalf("expected single row affected, got %d rows affected", rows)
+	}
 }
 
-// TODO
+// TODO (this func should work on server)
 func Update_problems_data() {}
 
 // TODO one time use func
