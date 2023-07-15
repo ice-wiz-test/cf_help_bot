@@ -24,8 +24,9 @@ func loadPage(title string) (*Page, error) {
 func Start() {
 	http.HandleFunc("/", homeHandler)
 	http.HandleFunc("/login", loginHandler)
+	http.HandleFunc("/register", registerHandler)
 	fmt.Println("Server started on http://localhost:8080")
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8000", nil)
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
@@ -45,5 +46,15 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		p = &Page{Title: title}
 	}
 	t, _ := template.ParseFiles("web/template/login.html")
+	t.Execute(w, p)
+}
+
+func registerHandler(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Path[len("/register"):]
+	p, err := loadPage(title)
+	if err != nil {
+		p = &Page{Title: title}
+	}
+	t, _ := template.ParseFiles("web/template/register.html")
 	t.Execute(w, p)
 }
