@@ -3,7 +3,6 @@
 	<head>
 		<title>Home Page</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
-		<link rel="stylesheet" href="home.css" >
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
@@ -18,28 +17,17 @@
 				</div>
 			</div>
 		  </nav>
-		  <div class="chat">
-			<img src="" alt="Avatar">
-			<p>Hello. How are you today?</p>
-			<span class="time-right">11:00</span>
-		  </div>
-		  
-		  <div class="chat darker">
-			<img src="" alt="Avatar" class="right">
-			<p>Hey! I'm fine. Thanks for asking!</p>
-			<span class="time-left">11:01</span>
-		  </div>
-		  
-		  <div class="chat">
-			<img src="" alt="Avatar">
-			<p>Sweet! So, what do you wanna do today?</p>
-			<span class="time-right">11:02</span>
-		  </div>
-		  
-		  <div class="chat darker">
-			<img src="" alt="Avatar" class="right">
-			<p>Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>
-			<span class="time-left">11:05</span>
-		  </div>
+		<div class="container justify-content-md-center" style="max-width: 30%;position: absolute; top: 40%; left: 35%;">
+					<h3>Login</h3>
+					<form>
+						<div class="mb-3">
+							<label for="handle" class="form-label" style="font-size: large;">Handle</label>
+							<input type="text" class="form-control" id="handle" placeholder="tourist">
+						</div>
+						<div class="d-grid gap-2 d-md-flex justify-content-md-center">
+						<a type="submit" class="btn btn-primary" href="/">Submit</a>
+					</form>
+				</div>
+			</div>
 	</body>
 </html>
