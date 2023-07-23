@@ -25,14 +25,41 @@ func get_connection() (error, *db.Conn) {
 	return err, conn
 }
 
-func Get_user_data(userId int) ([]interface{}, error) {
-	err, person_exists := Does_person_exist_in_database(int(userId))
+func Get_user_data_by_UserID(userId int) ([]interface{}, error) {
+	err, person_exists := Does_person_exist_in_database_by_UserID(int(userId))
 	if err != nil {
 		log.Fatal(err)
 	}
 	if person_exists {
 		query_string := "SELECT * FROM telegram_bot WHERE telegram_bot.userID = "
 		query_string += strconv.Itoa(userId)
+		rows, err := openedConnection.QueryContext(context.Background(), query_string)
+		log.Println("Get query done")
+		if err != nil {
+			log.Fatal(err)
+		}
+		var data []interface{}
+		for rows.Next() {
+			if err := rows.Scan(&data); err != nil {
+				log.Fatal(err)
+			}
+		}
+		rows.Close()
+		openedConnection.Close()
+		return data, nil
+	} else {
+		return nil, nil
+	}
+}
+
+func Get_user_data_by_handle(handle string) ([]interface{}, error) {
+	err, person_exists := Does_person_exist_in_database_by_handle(handle)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if person_exists {
+		query_string := "SELECT * FROM telegram_bot WHERE telegram_bot.handle = "
+		query_string += handle
 		rows, err := openedConnection.QueryContext(context.Background(), query_string)
 		log.Println("Get query done")
 		if err != nil {

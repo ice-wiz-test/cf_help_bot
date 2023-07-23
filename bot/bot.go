@@ -89,10 +89,10 @@ func Initialize() {
 		if strings.Contains(update.Message.Text, "/start") {
 			log.Println("Start")
 			// Send message to start language select
-			err, person_exits := db.Does_person_exist_in_database(update.Message.From.ID)
+			err, person_exits := db.Does_person_exist_in_database_by_UserID(update.Message.From.ID)
 			log.Println("Person exists:")
 			log.Println(person_exits)
-			data, err := db.Get_user_data(update.Message.From.ID)
+			data, err := db.Get_user_data_by_UserID(update.Message.From.ID)
 			log.Println("Database connected")
 			log.Println(data)
 			if err != nil {
