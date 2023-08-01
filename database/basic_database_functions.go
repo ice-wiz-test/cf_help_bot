@@ -28,7 +28,7 @@ func get_connection() (error, *db.Conn) {
 func Get_user_data_by_UserID(userId int) ([]interface{}, error) {
 	err, person_exists := Does_person_exist_in_database_by_UserID(int(userId))
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	if person_exists {
 		query_string := "SELECT * FROM telegram_bot WHERE telegram_bot.userID = "
@@ -36,7 +36,7 @@ func Get_user_data_by_UserID(userId int) ([]interface{}, error) {
 		rows, err := openedConnection.QueryContext(context.Background(), query_string)
 		log.Println("Get query done")
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		var data []interface{}
 		for rows.Next() {
@@ -55,7 +55,7 @@ func Get_user_data_by_UserID(userId int) ([]interface{}, error) {
 func Get_user_data_by_handle(handle string) ([]interface{}, error) {
 	err, person_exists := Does_person_exist_in_database_by_handle(handle)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	if person_exists {
 		query_string := "SELECT * FROM telegram_bot WHERE telegram_bot.handle = "
@@ -63,7 +63,7 @@ func Get_user_data_by_handle(handle string) ([]interface{}, error) {
 		rows, err := openedConnection.QueryContext(context.Background(), query_string)
 		log.Println("Get query done")
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		var data []interface{}
 		for rows.Next() {
@@ -87,10 +87,22 @@ func Set_user_data(userId int, u user.User, isLangSelected bool, isLangSelection
 	} else if lang == "rus" {
 		lang_db = 1
 	}
-	query := "INSERT INTO users (handle, isSettingLocalization, hasSetLocalization, localization, userID) VALUES (?, ?, ?, ?, ?)"
-	result, err := openedConnection.ExecContext(context.Background(), query, u.GetHandle(), isLangSelection, isLangSelected, lang_db, userId)
+	isLangSelectedDB := 0
+	isLangSelectionDB := 0
+	if isLangSelected == true {
+		isLangSelectedDB = 1
+	} else {
+		isLangSelectedDB = 0
+	}
+	if isLangSelection == true {
+		isLangSelectionDB = 1
+	} else {
+		isLangSelectionDB = 0
+	}
+	query := "INSERT INTO telegram_bot (handle, isSettingLocalization, hasSetLocalization, localization, userID) VALUES ($1, $2, $3, $4, $5)"
+	result, err := openedConnection.ExecContext(context.Background(), query, u.GetHandle(), isLangSelectionDB, isLangSelectedDB, lang_db, userId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	rows, err := result.RowsAffected()
 	if err != nil {
